@@ -29,8 +29,10 @@ if (args.rsync)
 const nodePaths = ['pkg/lib'];
 const outdir = 'dist';
 
+// TODO: Fix this. Shouldn't get name from package.json
 // Obtain package name from package.json
-const packageJson = JSON.parse(fs.readFileSync('package.json'));
+// const packageJson = JSON.parse(fs.readFileSync('package.json'));
+const name = "bootc"
 
 function notifyEndPlugin() {
     return {
@@ -110,7 +112,7 @@ const context = await esbuild.context({
 
         cockpitPoEsbuildPlugin(),
         ...production ? [cockpitCompressPlugin()] : [],
-        cockpitRsyncEsbuildPlugin({ dest: packageJson.name }),
+        cockpitRsyncEsbuildPlugin({ dest: name }),
         notifyEndPlugin(),
     ]
 });

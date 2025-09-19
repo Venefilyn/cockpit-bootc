@@ -17,6 +17,7 @@
 /*.whl
 /bots
 /cockpit-*.tar.xz
+/cockpit-*.spec
 /cockpit-navigator.spec
 /dist/
 /package-lock.json
@@ -24,7 +25,7 @@
 /node_modules/
 /tmp/
 /tools/
- 
+
 # subdirs (/subdir/...)
 /packaging/arch/PKGBUILD
 /packaging/debian/changelog

@@ -1,9 +1,9 @@
-pkgname=cockpit-starter-kit
+pkgname=cockpit-bootc
 pkgver=VERSION
 pkgrel=1
 pkgdesc='Cockpit Starter Kit Example Module'
 arch=('x86_64')
-url='https://github.com/cockpit-project/starter-kit'
+url='https://github.com/Venefilyn/cockpit-bootc'
 license=(LGPL)
 source=("SOURCE")
 sha256sums=('SKIP')

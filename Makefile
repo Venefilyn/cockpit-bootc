@@ -1,9 +1,9 @@
 # extract name from package.json
-PACKAGE_NAME := $(shell awk '/"name":/ {gsub(/[",]/, "", $$2); print $$2}' package.json)
+PACKAGE_NAME := bootc
 RPM_NAME := cockpit-$(PACKAGE_NAME)
 VERSION := $(shell T=$$(git describe 2>/dev/null) || T=1; echo $$T | tr '-' '.')
 ifeq ($(TEST_OS),)
-TEST_OS = centos-9-stream
+TEST_OS = centos-9-bootc
 endif
 export TEST_OS
 TARFILE=$(RPM_NAME)-$(VERSION).tar.xz
@@ -20,6 +20,16 @@ DIST_TEST=dist/manifest.json
 COCKPIT_REPO_STAMP=pkg/lib/cockpit-po-plugin.js
 # common arguments for tar, mostly to make the generated tarballs reproducible
 TAR_ARGS = --sort=name --mtime "@$(shell git show --no-patch --format='%at')" --mode=go=rX,u+rw,a-s --numeric-owner --owner=0 --group=0
+
+# VM_CUSTOMIZE_FLAGS = --upload $(TARFILE):/var/tmp/ --script $(CURDIR)/test/vm-beiboot.install
+VM_CUSTOMIZE_FLAGS =
+
+ifneq (,$(or $(findstring coreos,$(TEST_OS)),$(findstring bootc,$(TEST_OS))))
+# HACK for ostree images: skip the rpm build/install
+VM_CUSTOMIZE_FLAGS += --run-command 'mkdir -p /usr/local/share/cockpit' --upload dist/:/usr/local/share/cockpit/bootc
+# else
+# VM_CUSTOMIZE_FLAGS += --build $(TARFILE) --script $(CURDIR)/test/vm-ws-package.install
+endif
 
 all: $(DIST_TEST)
 
@@ -164,7 +174,7 @@ rpm: $(TARFILE) $(NODE_CACHE) $(SPEC)
 $(VM_IMAGE): export XZ_OPT=-0
 $(VM_IMAGE): $(TARFILE) $(NODE_CACHE) bots test/vm.install
 	bots/image-customize --no-network --fresh \
-		--upload $(NODE_CACHE):/var/tmp/ --build $(TARFILE) \
+		$(VM_CUSTOMIZE_FLAGS) \
 		--script $(CURDIR)/test/vm.install $(TEST_OS)
 
 # convenience target for the above
