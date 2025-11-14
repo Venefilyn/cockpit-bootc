@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="addon">
-  <id>org.cockpit_project.starter_kit</id>
+  <id>dev.venefilyn.bootc.metainfo</id>
   <metadata_license>CC0-1.0</metadata_license>
   <name>Starter Kit</name>
   <summary>Scaffolding for a cockpit module</summary>
@@ -13,11 +13,11 @@
     </p>
   </description>
   <extends>org.cockpit_project.cockpit</extends>
-  <launchable type="cockpit-manifest">starter-kit</launchable>
-  <url type="homepage">https://github.com/cockpit-project/starter-kit</url>
-  <url type="bugtracker">https://github.com/cockpit-project/starter-kit/issues</url>
+  <launchable type="cockpit-manifest">bootc</launchable>
+  <url type="homepage">https://github.com/Venefilyn/bootc</url>
+  <url type="bugtracker">https://github.com/Venefilyn/bootc/issues</url>
   <update_contact>cockpit-devel_AT_lists.fedorahosted.org</update_contact>
-  <developer id="org.cockpit-project">
-    <name>Cockpit Project</name>
+  <developer id="dev.venefilyn">
+    <name>Freya Gustavsson</name>
   </developer>
 </component>

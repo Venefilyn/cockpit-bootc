@@ -1,8 +1,35 @@
-# Cockpit Starter Kit
+# Cockpit bootc
 
-Scaffolding for a [Cockpit](https://cockpit-project.org/) module.
+Heavy work in progress
 
-# Development dependencies
+## To do
+
+- [x] Create and start bootc VM successfully
+- [ ] Auto-start a local registry for testing
+- [ ] Show status of current deployment
+- [ ] Show history of previous deployments
+- [ ] Allow CRUD of bootc repos
+- [ ] Allow switching/rebasing to repos
+- [ ] Show whether updates can be applied live or not
+- [ ] Handle situation where `rpm-ostree` has done modifications
+
+## Get started
+
+1. `distrobox create --image ghcr.io/cockpit-project/tasks --name cockpit --pull`
+2. `distrobox enter cockpit`
+3. `make vm`
+4. `make start-vm`
+
+To make updates:
+
+- Build once `./build.js -r <IP>`
+- Continually build `./build.js -r <IP> -w`
+
+---
+
+from template
+
+## Development dependencies
 
 On Debian/Ubuntu:
 
@@ -13,7 +40,7 @@ On Fedora:
     sudo dnf install gettext nodejs npm make
 
 
-# Getting and building the source
+## Getting and building the source
 
 These commands check out the source and build it into the `dist/` directory:
 
@@ -23,7 +50,7 @@ cd starter-kit
 make
 ```
 
-# Installing
+## Installing
 
 `make install` compiles and installs the package in `/usr/local/share/cockpit/`. The
 convenience targets `srpm` and `rpm` build the source and binary rpms,
@@ -72,7 +99,7 @@ remove manually the symlink:
 
     rm ~/.local/share/cockpit/starter-kit
 
-# Running eslint
+## Running eslint
 
 Cockpit Starter Kit uses [ESLint](https://eslint.org/) to automatically check
 JavaScript/TypeScript code style in `.js[x]` and `.ts[x]` files.
@@ -89,7 +116,7 @@ Violations of some rules can be fixed automatically by:
 
 Rules configuration can be found in the `.eslintrc.json` file.
 
-## Running stylelint
+### Running stylelint
 
 Cockpit uses [Stylelint](https://stylelint.io/) to automatically check CSS code
 style in `.css` and `scss` files.
@@ -106,7 +133,7 @@ Violations of some rules can be fixed automatically by:
 
 Rules configuration can be found in the `.stylelintrc.json` file.
 
-# Running tests locally
+## Running tests locally
 
 Run `make check` to build an RPM, install it into a standard Cockpit test VM
 (centos-9-stream by default), and run the test/check-application integration test on
@@ -130,7 +157,7 @@ You can also run the test against a different Cockpit image, for example:
 
     TEST_OS=fedora-40 make check
 
-# Running tests in CI
+## Running tests in CI
 
 These tests can be run in [Cirrus CI](https://cirrus-ci.org/), on their free
 [Linux Containers](https://cirrus-ci.org/guide/linux/) environment which
@@ -153,7 +180,7 @@ for using with the [tmt test management tool](https://docs.fedoraproject.org/en-
 Note that Packit tests can *not* run their own virtual machine images, thus
 they only run [@nondestructive tests](https://github.com/cockpit-project/cockpit/blob/main/test/common/testlib.py).
 
-# Customizing
+## Customizing
 
 After cloning the Starter Kit you should rename the files, package names, and
 labels to your own project's name. Use these commands to find out what to
@@ -162,7 +189,7 @@ change:
     find -iname '*starter*'
     git grep -i starter
 
-# Automated release
+## Automated release
 
 Once your cloned project is ready for a release, you should consider automating
 that. The intention is that the only manual step for releasing a project is to create
@@ -185,14 +212,14 @@ at the top, and rename it to just `*.yml`.
 The Fedora and COPR releases are done with [Packit](https://packit.dev/),
 see the [packit.yaml](./packit.yaml) control file.
 
-# Automated maintenance
+## Automated maintenance
 
 It is important to keep your [NPM modules](./package.json) up to date, to keep
 up with security updates and bug fixes. This happens with
 [dependabot](https://github.com/dependabot),
 see [configuration file](.github/dependabot.yml).
 
-# Further reading
+## Further reading
 
  * The [Starter Kit announcement](https://cockpit-project.org/blog/cockpit-starter-kit.html)
    blog post explains the rationale for this project.
