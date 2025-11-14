@@ -15,7 +15,8 @@
     "eslint": "eslint src/",
     "eslint:fix": "eslint --fix src/",
     "stylelint": "stylelint src/*{.css,scss}",
-    "stylelint:fix": "stylelint --fix src/*{.css,scss}"
+    "stylelint:fix": "stylelint --fix src/*{.css,scss}",
+    "bootc:generate": "quicktype --src-lang schema --src src/bootc-api.schema.json --out src/BootcAPI.ts"
   },
   "devDependencies": {
     "@types/react": "18.3.13",
@@ -37,6 +38,7 @@
     "gettext-parser": "8.0.0",
     "glob": "11.0.3",
     "jed": "1.1.1",
+    "quicktype": "^23.2.6",
     "qunit": "2.24.1",
     "stylelint": "16.24.0",
     "stylelint-config-recommended-scss": "16.0.1",

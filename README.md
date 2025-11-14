@@ -2,6 +2,17 @@
 
 Heavy work in progress
 
+## To do
+
+- [x] Create and start bootc VM successfully
+- [ ] Auto-start a local registry for testing
+- [ ] Show status of current deployment
+- [ ] Show history of previous deployments
+- [ ] Allow CRUD of bootc repos
+- [ ] Allow switching/rebasing to repos
+- [ ] Show whether updates can be applied live or not
+- [ ] Handle situation where `rpm-ostree` has done modifications
+
 ## Get started
 
 1. `distrobox create --image ghcr.io/cockpit-project/tasks --name cockpit --pull`
@@ -11,8 +22,12 @@ Heavy work in progress
 
 To make updates:
 
-- Build once
-- Continually build
+- Build once `./build.js -r <IP>`
+- Continually build `./build.js -r <IP> -w`
+
+---
+
+from template
 
 ## Development dependencies
 
