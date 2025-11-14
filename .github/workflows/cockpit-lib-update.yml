@@ -4,6 +4,10 @@ on:
     - cron: '0 2 * * 4'
   # can be run manually on https://github.com/cockpit-project/starter-kit/actions
   workflow_dispatch:
+
+permissions:
+  pull-requests: write
+
 jobs:
   cockpit-lib-update:
     runs-on: ubuntu-latest
