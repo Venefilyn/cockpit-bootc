@@ -186,7 +186,7 @@ print-vm:
 	@echo $(VM_IMAGE)
 
 start-vm: $(VM_IMAGE)
-	bots/vm-run -s cockpit.service $(VM_IMAGE)
+	bots/vm-run -s cockpit.service -e systemctl start bootc-registry.service $(VM_IMAGE)
 
 # convenience target to setup all the bits needed for the integration tests
 # without actually running them
