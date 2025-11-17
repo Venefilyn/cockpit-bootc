@@ -18,31 +18,58 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Alert } from "@patternfly/react-core/dist/esm/components/Alert/index.js";
+import { BootcAPI, Convert } from "./BootcAPI";
 import { Card, CardBody, CardTitle } from "@patternfly/react-core/dist/esm/components/Card/index.js";
 
 import cockpit from 'cockpit';
+import { Alert, Page } from '@patternfly/react-core';
+import { BootcStatus } from './BootcStatus';
 
 const _ = cockpit.gettext;
 
+export async function getStatus() {
+  const output = await cockpit.spawn(["bootc", "status", "--json", "--format-version=1"],
+    { superuser: "require", err: "message" });
+  // bootc status is the only one that has an API
+  return Convert.toBootcAPI(output);
+}
+
 export const Application = () => {
-    const [hostname, setHostname] = useState(_("Unknown"));
+  const [hostname, setHostname] = useState(_("Unknown"));
+  const [status, setStatus] = useState<BootcAPI["status"]>(undefined)
+  const [error, setError] = useState<string>()
 
-    useEffect(() => {
-        const hostname = cockpit.file('/etc/hostname');
-        hostname.watch(content => setHostname(content?.trim() ?? ""));
-        return hostname.close;
-    }, []);
+  useEffect(() => {
+    const hostname = cockpit.file('/etc/hostname');
+    hostname.watch(content => setHostname(content?.trim() ?? ""));
+    return hostname.close;
+  }, []);
 
-    return (
-        <Card>
-            <CardTitle>Starter Kit</CardTitle>
-            <CardBody>
-                <Alert
-                    variant="info"
-                    title={ cockpit.format(_("Running on $0"), hostname) }
-                />
-            </CardBody>
-        </Card>
-    );
+  return (
+    <Page className='pf-m-no-sidebar'>
+      {/* Create a Context provider thing and set data to that, makes it easier to send between all components */}
+      {error && <Alert title="Error">{error}</Alert>}
+      <BootcStatus onError={setError} />
+      <Card>
+        <CardTitle>Bootc Source</CardTitle>
+        <CardBody>
+          <ul>
+            <li>Repo</li>
+            <li>branch</li>
+            <li>Signed/unsigned</li>
+          </ul>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardTitle>Deployments and updates</CardTitle>
+        <CardBody>
+          Table with version, status, time, branch, rollback button, actions with delete, pin or unpin.
+          Expand with tabs Tree, Packages, Signatures
+          Tree: OS, version, release, origin
+          Packages: List of all installed packages
+          Signatures: Idk
+        </CardBody>
+      </Card>
+    </Page>
+  );
 };

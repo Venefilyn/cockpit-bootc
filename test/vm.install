@@ -41,7 +41,7 @@ podman push localhost:5000/bootc:cockpit1
 podman rmi localhost:5000/bootc:latest localhost:5000/bootc:cockpit1
 
 # Create quadlet for a registry
-printf '[Unit]\nWants=network-online.target\nAfter=network-online.target\n\n[Container]\nContainerName=bootc-registry\nImage=localhost/test-registry\nPublishPort=5000:5000\nVolume=/var/lib/cockpit-test-registry/:/var/lib/registry\n' > /etc/containers/systemd/bootc-registry.container
+printf '[Install]\nWantedBy=default.target\n\n[Container]\nContainerName=bootc-registry\nImage=localhost/test-registry\nPublishPort=5000:5000\nVolume=/var/lib/cockpit-test-registry/:/var/lib/registry\n' > /etc/containers/systemd/bootc-registry.container
 
 systemctl daemon-reload
 
