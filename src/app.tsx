@@ -19,11 +19,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { BootcAPI, Convert } from "./BootcAPI";
-import { Card, CardBody, CardTitle } from "@patternfly/react-core/dist/esm/components/Card/index.js";
+import { Card, CardBody, CardHeader, CardTitle } from "@patternfly/react-core/dist/esm/components/Card/index.js";
 
 import cockpit from 'cockpit';
-import { Alert, Page } from '@patternfly/react-core';
+import { Alert, Gallery, Page, PageSection } from '@patternfly/react-core';
 import { BootcStatus } from './BootcStatus';
+import { BootcStatusContext } from './BootcContext';
+import { BootcSource } from './BootcSource';
 
 const _ = cockpit.gettext;
 
@@ -34,9 +36,10 @@ export async function getStatus() {
   return Convert.toBootcAPI(output);
 }
 
+
 export const Application = () => {
   const [hostname, setHostname] = useState(_("Unknown"));
-  const [status, setStatus] = useState<BootcAPI["status"]>(undefined)
+  const [status, setStatus] = useState<BootcAPI|undefined>(undefined)
   const [error, setError] = useState<string>()
 
   useEffect(() => {
@@ -45,31 +48,50 @@ export const Application = () => {
     return hostname.close;
   }, []);
 
+
+  useEffect(() => {
+    getStatus().then(status => {
+      setStatus(status)
+    }).catch(err => {
+      setError(err.message);
+    })
+  }, [])
+
   return (
-    <Page className='pf-m-no-sidebar'>
-      {/* Create a Context provider thing and set data to that, makes it easier to send between all components */}
-      {error && <Alert title="Error">{error}</Alert>}
-      <BootcStatus onError={setError} />
-      <Card>
-        <CardTitle>Bootc Source</CardTitle>
-        <CardBody>
-          <ul>
-            <li>Repo</li>
-            <li>branch</li>
-            <li>Signed/unsigned</li>
-          </ul>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardTitle>Deployments and updates</CardTitle>
-        <CardBody>
-          Table with version, status, time, branch, rollback button, actions with delete, pin or unpin.
-          Expand with tabs Tree, Packages, Signatures
-          Tree: OS, version, release, origin
-          Packages: List of all installed packages
-          Signatures: Idk
-        </CardBody>
-      </Card>
-    </Page>
+    <BootcStatusContext.Provider value={status}>
+      <Page className='pf-m-no-sidebar'>
+        <PageSection hasBodyWrapper={false}>
+          <Gallery hasGutter className="ct-cards-grid">
+            {/* Create a Context provider thing and set data to that, makes it easier to send between all components */}
+            {error && <Alert title="Error">{error}</Alert>}
+            <BootcStatus onError={setError} />
+            <BootcSource onError={setError} />
+            <Card className="ct-card-info">
+              <CardHeader>
+                <CardTitle component="h2">{_("Bootc source")}</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <ul>
+                  <li>Repo</li>
+                  <li>branch</li>
+                  <li>Signed/unsigned</li>
+                </ul>
+              </CardBody>
+            </Card>
+          </Gallery>
+          <Card>
+            <CardTitle>Deployments and updates</CardTitle>
+            <CardBody>
+              Table with version, status, time, branch, rollback button, actions with delete, pin or unpin.
+              Expand with tabs Tree, Packages, Signatures
+              Tree: OS, version, release, origin
+              Packages: List of all installed packages
+              Signatures: Idk
+              <pre>{ JSON.stringify(status, null, 2) }</pre>
+            </CardBody>
+          </Card>
+        </PageSection>
+      </Page>
+    </BootcStatusContext.Provider>
   );
 };
