@@ -36,7 +36,7 @@ fi
 podman run -d --name ostree-registry -p 5000:5000 -v /var/lib/cockpit-test-registry/:/var/lib/registry localhost/test-registry
 # Switch to port 5000 repo so we can start container easier
 bootc switch localhost:5000/bootc:latest
-printf 'FROM localhost:5000/bootc:latest\nRUN rpm -e --verbose less' | podman build -t localhost:5000/bootc:cockpit1 -
+printf 'FROM localhost:5000/bootc:latest\nRUN rpm -e --verbose man-db less' | podman build -t localhost:5000/bootc:cockpit1 -
 podman push localhost:5000/bootc:cockpit1
 podman rmi localhost:5000/bootc:latest localhost:5000/bootc:cockpit1
 
