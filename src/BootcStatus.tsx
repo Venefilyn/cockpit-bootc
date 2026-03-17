@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { Card, CardTitle, CardBody, List, ListItem } from "@patternfly/react-core"
-import { CheckIcon, InfoIcon } from "@patternfly/react-icons";
+import React, { useContext, useEffect, useState } from "react"
+import { Card, CardTitle, CardBody, List, ListItem, Icon } from "@patternfly/react-core"
+import { CheckIcon, InfoIcon, QuestionIcon } from "@patternfly/react-icons";
 import cockpit from 'cockpit';
+import { BootcStatusContext } from "./BootcContext";
 
 const _ = cockpit.gettext;
 
@@ -37,30 +38,41 @@ export async function checkUpgrades(): Promise<UpgradeType> {
 
 export const BootcStatus = ({ onError }: { onError: (status: string) => void }) => {
   const [status, setStatus] = useState<UpgradeType>()
+  const bootcStatus = useContext(BootcStatusContext)
 
   useEffect(() => {
+    // Not bootc
+    if (bootcStatus?.spec?.image && bootcStatus.spec.image == null) {
+      return;
+    }
+
     checkUpgrades().then(hasUpgrades => {
       setStatus(hasUpgrades)
     }).catch(err => {
       onError(err.message);
     })
-  }, [])
+  }, [bootcStatus])
 
   const listItems: React.JSX.Element[] = []
 
-  if (status) {
-    if (status.hasUpgrades) {
-      listItems.push(<ListItem key="version" icon={<InfoIcon />}>System can be updated to {status.version}</ListItem>)
-    } else {
-      listItems.push(<ListItem key="no-updates" icon={<CheckIcon />}>{_("No updates available")}</ListItem>)
-    }
+  // Is system up-to-date
+  if (bootcStatus?.spec?.image && bootcStatus.spec.image == null) {
+    listItems.push(<ListItem key="not-bootc" icon={<Icon status="warning"><QuestionIcon /></Icon>}>{_("System is not configured for bootc")}</ListItem>)
+  } else if (status?.hasUpgrades) {
+    listItems.push(<ListItem key="version" icon={<Icon status="info"><InfoIcon /></Icon>}>{cockpit.format(_("System can be updated to $0"), status.version)}</ListItem>)
+  } else if (!status) {
+    listItems.push(<ListItem key="no-updates" icon={<Icon isInProgress />}>{_("Checking for updates")}</ListItem>)
+  } else {
+    listItems.push(<ListItem key="no-updates" icon={<Icon status="success"><CheckIcon /></Icon>}>{_("System is up to date")}</ListItem>)
   }
+
+  if (bootcStatus)
 
   return (
     <Card>
-        <CardTitle>Status</CardTitle>
+        <CardTitle>{_("Status")}</CardTitle>
         <CardBody>
-          <List>
+          <List isPlain>
             {...listItems}
           </List>
         </CardBody>
