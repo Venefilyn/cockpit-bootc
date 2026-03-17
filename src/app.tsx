@@ -27,6 +27,7 @@ import { Alert, Gallery, Page, PageSection } from '@patternfly/react-core';
 import { BootcStatus } from './BootcStatus';
 import { BootcStatusContext } from './BootcContext';
 import { BootcSource } from './BootcSource';
+import { Deployments } from './Deployments';
 
 const _ = cockpit.gettext;
 
@@ -67,27 +68,22 @@ export const Application = () => {
             {error && <Alert title="Error">{error}</Alert>}
             <BootcStatus onError={setError} />
             <BootcSource onError={setError} />
-            <Card className="ct-card-info">
-              <CardHeader>
-                <CardTitle component="h2">{_("Bootc source")}</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <ul>
-                  <li>Repo</li>
-                  <li>branch</li>
-                  <li>Signed/unsigned</li>
-                </ul>
-              </CardBody>
-            </Card>
           </Gallery>
           <Card>
             <CardTitle>Deployments and updates</CardTitle>
             <CardBody>
+              <Deployments />
+              <br />
               Table with version, status, time, branch, rollback button, actions with delete, pin or unpin.
               Expand with tabs Tree, Packages, Signatures
               Tree: OS, version, release, origin
               Packages: List of all installed packages
               Signatures: Idk
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody>
               <pre>{ JSON.stringify(status, null, 2) }</pre>
             </CardBody>
           </Card>
