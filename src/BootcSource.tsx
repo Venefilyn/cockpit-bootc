@@ -29,7 +29,7 @@ export const BootcSource = ({ onError }: { onError: (status: string) => void }) 
 
   return (
     <Card>
-        <CardTitle>Status</CardTitle>
+        <CardTitle>{_("Source")}</CardTitle>
         <CardBody>
           <DescriptionList isHorizontal>
               <DescriptionListGroup id="current-repository">
