@@ -2,10 +2,23 @@
     "requires": {
         "cockpit": "137"
     },
-
+    "conditions": [
+        {
+            "path-exists": "/run/ostree-booted"
+        }
+    ],
     "tools": {
         "index": {
-            "label": "Software updates (bootc)"
+            "label": "Software updates",
+            "docs": [
+                {
+                    "label": "bootc documentation",
+                    "url": "https://bootc-dev.github.io"
+                }
+            ]
         }
-    }
+    },
+    "preload": [
+        "index"
+    ]
 }
