@@ -45,8 +45,8 @@ On Fedora:
 These commands check out the source and build it into the `dist/` directory:
 
 ```
-git clone https://github.com/cockpit-project/starter-kit.git
-cd starter-kit
+git clone https://github.com/Venefilyn/cockpit-bootc.git
+cd cockpit-bootc
 make
 ```
 
@@ -66,7 +66,7 @@ this manually:
 
 ```
 mkdir -p ~/.local/share/cockpit
-ln -s `pwd`/dist ~/.local/share/cockpit/starter-kit
+ln -s `pwd`/dist ~/.local/share/cockpit/bootc
 ```
 
 After changing the code and running `make` again, reload the Cockpit page in
