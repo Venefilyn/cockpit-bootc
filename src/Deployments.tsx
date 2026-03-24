@@ -7,20 +7,30 @@ import * as timeformat from 'timeformat';
 import { ListingTable, ListingTableProps } from "cockpit-components-table";
 import { BootcStatusContext } from './BootcContext';
 import { BootedObject } from './BootcAPI';
-import { Flex, getUniqueId } from '@patternfly/react-core';
+import { Flex, getUniqueId, Label } from '@patternfly/react-core';
+import { CheckCircleIcon, KeyIcon, PendingIcon } from '@patternfly/react-icons';
 
 const _ = cockpit.gettext;
 
+interface DeploymentDetailsProps {
+  bootObject: BootedObject;
+  staged?: boolean;
+  current?: boolean;
+}
 
-const DeploymentDetails = (bootObject: BootedObject) => {
+const DeploymentDetails = ({bootObject, staged, current}: DeploymentDetailsProps) => {
     const version = bootObject.image?.version;
     const image = bootObject.image?.image?.image;
 
-    // const labels = [];
-    // if (inProgress)
-    //     labels.push(<Label icon={<PendingIcon />} key={"updating" + version}>{_("Updating")}</Label>);
-    // if (info.booted && info.booted.v)
-    //     labels.push(<Label color="blue" key={"current" + version} icon={<CheckCircleIcon />}>{_("Current")}</Label>);
+    const labels = [];
+    // Is it signed?
+    if (bootObject?.image?.image.signature)
+        labels.push(<Label color="purple" icon={<KeyIcon />} key={"signed" + version}>{_("Signed")}</Label>);
+    // Is it staged?
+    if (staged)
+        labels.push(<Label icon={<PendingIcon />} key={"staged" + version}>{_("Staged")}</Label>);
+    if (current)
+        labels.push(<Label color="blue" key={"current" + version} icon={<CheckCircleIcon />}>{_("Current")}</Label>);
     // if (info?.pinned?.v)
     //     labels.push(<Label color="grey" key={"pinned" + version}>{_("Pinned")}</Label>);
     // if (error)
@@ -86,7 +96,7 @@ const DeploymentDetails = (bootObject: BootedObject) => {
       columns.push({
           title: (
             <Flex spaceItems={{ default: 'spaceItemsSm' }}>
-              {/* {labels} */}
+              {labels}
             </Flex>
           ),
       });
@@ -226,13 +236,13 @@ export const Deployments = () => {
 
   const rows: ListingTableProps["rows"] = [];
   if (bootcStatus?.status?.staged) {
-    rows.push(DeploymentDetails(bootcStatus.status.staged))
+    rows.push(DeploymentDetails({ bootObject: bootcStatus.status.staged, staged: true }))
   }
   if (bootcStatus?.status?.booted) {
-    rows.push(DeploymentDetails(bootcStatus.status.booted))
+    rows.push(DeploymentDetails({ bootObject: bootcStatus.status.booted, current: true }))
   }
   if (bootcStatus?.status?.rollback) {
-    rows.push(DeploymentDetails(bootcStatus.status.rollback))
+    rows.push(DeploymentDetails({ bootObject: bootcStatus.status.rollback }))
   }
 
   return (
