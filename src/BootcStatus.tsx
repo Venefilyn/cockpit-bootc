@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { Card, CardTitle, CardBody, List, ListItem, Icon } from "@patternfly/react-core"
-import { CheckIcon, InfoIcon, QuestionIcon } from "@patternfly/react-icons";
+import { CheckIcon, InfoIcon, KeyIcon, QuestionIcon } from "@patternfly/react-icons";
 import cockpit from 'cockpit';
 import { BootcStatusContext } from "./BootcContext";
 
@@ -63,10 +63,15 @@ export const BootcStatus = ({ onError }: { onError: (status: string) => void }) 
   } else if (!status) {
     listItems.push(<ListItem key="no-updates" icon={<Icon isInProgress />}>{_("Checking for updates")}</ListItem>)
   } else {
-    listItems.push(<ListItem key="no-updates" icon={<Icon status="success"><CheckIcon /></Icon>}>{_("System is up to date")}</ListItem>)
+    listItems.push(<ListItem key="up-to-date" icon={<Icon status="success"><CheckIcon /></Icon>}>{_("System is up to date")}</ListItem>)
   }
 
-  if (bootcStatus)
+  // TODO: Can we verify system will boot successfully? SecureBoot and all
+  if (bootcStatus?.spec?.image?.signature || true) {
+    listItems.push(<ListItem key="verified-boot" icon={<Icon status="info"><KeyIcon /></Icon>}>{_("Signed deployment")}</ListItem>)
+  }
+
+  // if (bootcStatus)
 
   return (
     <Card>
