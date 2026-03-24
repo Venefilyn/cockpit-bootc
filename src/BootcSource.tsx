@@ -6,7 +6,7 @@ import { splitRepoBranch } from "./helpers";
 
 const _ = cockpit.gettext;
 
-export const BootcSource = ({ onError }: { onError: (status: string) => void }) => {
+export const BootcSource = ({ className="", onError }: { className?: string, onError: (status: string) => void }) => {
   const status = useContext(BootcStatusContext);
   const [repo, setRepo] = useState("");
   const [branch, setBranch] = useState("");
@@ -28,7 +28,7 @@ export const BootcSource = ({ onError }: { onError: (status: string) => void }) 
 
 
   return (
-    <Card>
+    <Card className={className}>
         <CardTitle>{_("Source")}</CardTitle>
         <CardBody>
           <DescriptionList isHorizontal>

@@ -66,8 +66,8 @@ export const Application = () => {
           <Gallery hasGutter className="ct-cards-grid">
             {/* Create a Context provider thing and set data to that, makes it easier to send between all components */}
             {error && <Alert title="Error">{error}</Alert>}
-            <BootcStatus onError={setError} />
-            <BootcSource onError={setError} />
+            <BootcStatus className="ct-card-info" onError={setError} />
+            <BootcSource className="ct-card-info" onError={setError} />
           </Gallery>
           <Card>
             <CardTitle>Deployments and updates</CardTitle>

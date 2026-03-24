@@ -36,7 +36,7 @@ export async function checkUpgrades(): Promise<UpgradeType> {
     }
 }
 
-export const BootcStatus = ({ onError }: { onError: (status: string) => void }) => {
+export const BootcStatus = ({ className="", onError }: { className?: string, onError: (status: string) => void }) => {
   const [status, setStatus] = useState<UpgradeType>()
   const bootcStatus = useContext(BootcStatusContext)
 
@@ -74,7 +74,7 @@ export const BootcStatus = ({ onError }: { onError: (status: string) => void }) 
   // if (bootcStatus)
 
   return (
-    <Card>
+    <Card className={className}>
         <CardTitle>{_("Status")}</CardTitle>
         <CardBody>
           <List isPlain>
